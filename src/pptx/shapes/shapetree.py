@@ -671,7 +671,10 @@ class MasterShapes(_BaseShapes):
     The first shape in the sequence is the backmost in z-order and the last shape is topmost.
     Supports indexed access, len(), and iteration.
     """
-
+    @property
+    def _next_shape_id(self):
+        return self._spTree.next_shape_id
+    
     def _shape_factory(self, shape_elm: ShapeElement) -> BaseShape:
         """Return an instance of the appropriate shape proxy class for `shape_elm`."""
         return _MasterShapeFactory(shape_elm, self)
@@ -694,7 +697,7 @@ class MasterShapes(_BaseShapes):
         cx,
         cy
     ):
-        id_ = self._next_pic_shape_id  # <--- uses our new property
+        id_ = self._next_shape_id  # <--- uses our new property
         scaled_cx, scaled_cy = image_part.scale(cx, cy)
         name = f"Picture {id_ - 1}"
         desc = image_part.desc
@@ -718,7 +721,7 @@ class MasterShapes(_BaseShapes):
         return self._shape_factory(cxnSp)
     
     def _add_cxnSp(self, connector_type, begin_x, begin_y, end_x, end_y):
-        id_ = self._spTree.next_cxn_shape_id
+        id_ = self._spTree._next_shape_id
         name = f"Connector {id_ - 1}"
         flipH, flipV = begin_x > end_x, begin_y > end_y
         x, y = min(begin_x, end_x), min(begin_y, end_y)
