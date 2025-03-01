@@ -712,7 +712,18 @@ class MasterShapes(_BaseShapes):
         name = f"{autoshape_type.basename} {id_ - 1}"
         return self._spTree.add_autoshape(id_, name, autoshape_type.prst, x, y, cx, cy)
 
+    def add_connector(self, connector_type, begin_x, begin_y, end_x, end_y):
+        cxnSp = self._add_cxnSp(connector_type, begin_x, begin_y, end_x, end_y)
+        self._spTree.append(cxnSp)  # <--- important to make it visible
+        return self._shape_factory(cxnSp)
 
+    def _add_cxnSp(self, connector_type, begin_x, begin_y, end_x, end_y):
+        id_ = self._next_shape_id
+        name = f"Connector {id_ - 1}"
+        flipH, flipV = begin_x > end_x, begin_y > end_y
+        x, y = min(begin_x, end_x), min(begin_y, end_y)
+        cx, cy = abs(end_x - begin_x), abs(end_y - begin_y)
+        return self._spTree.add_cxnSp(id_, name, connector_type, x, y, cx, cy, flipH, flipV)
 
 class NotesSlideShapes(_BaseShapes):
     """Sequence of shapes appearing on a notes slide.
