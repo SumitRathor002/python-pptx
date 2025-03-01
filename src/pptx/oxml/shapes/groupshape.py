@@ -40,6 +40,11 @@ class CT_GroupShape(BaseShapeElement):
         qn("p:contentPart"),
     )
 
+    @property
+    def next_pic_shape_id(self):
+        used_ids = [int(id_str) for id_str in self.xpath("//p:cNvPr/@id")]
+        return max(used_ids) + 1
+    
     def add_autoshape(
         self, id_: int, name: str, prst: str, x: int, y: int, cx: int, cy: int
     ) -> CT_Shape:

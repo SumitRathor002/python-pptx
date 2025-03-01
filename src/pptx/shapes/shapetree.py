@@ -160,6 +160,11 @@ class _BaseShapes(ParentedElementProxy):
         """
         return self._cached_max_shape_id is not None
 
+    @property
+    def _next_pic_shape_id(self) -> int:
+        return self._spTree.next_pic_shape_id
+
+
     @turbo_add_enabled.setter
     def turbo_add_enabled(self, value: bool):
         enable = bool(value)
@@ -670,6 +675,36 @@ class MasterShapes(_BaseShapes):
     def _shape_factory(self, shape_elm: ShapeElement) -> BaseShape:
         """Return an instance of the appropriate shape proxy class for `shape_elm`."""
         return _MasterShapeFactory(shape_elm, self)
+    
+    # in MasterShapes
+    def add_picture(
+        self,
+        image_file,
+        left,
+        top,
+        width=None,
+        height=None
+    ):
+        image_part, rId = self.part.get_or_add_image_part(image_file)
+        pic = self._add_pic_from_image_part(image_part, rId, left, top, width, height)
+        return self._shape_factory(pic)
+
+    def _add_pic_from_image_part(
+        self,
+        image_part,
+        rId,
+        x,
+        y,
+        cx,
+        cy
+    ):
+        id_ = self._next_pic_shape_id  # <--- uses our new property
+        scaled_cx, scaled_cy = image_part.scale(cx, cy)
+        name = f"Picture {id_ - 1}"
+        desc = image_part.desc
+        pic = self._spTree.add_pic(id_, name, desc, rId, x, y, scaled_cx, scaled_cy)
+        return pic
+
 
 
 class NotesSlideShapes(_BaseShapes):
