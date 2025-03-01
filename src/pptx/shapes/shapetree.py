@@ -701,6 +701,17 @@ class MasterShapes(_BaseShapes):
         pic = self._spTree.add_pic(id_, name, desc, rId, x, y, scaled_cx, scaled_cy)
         return pic
 
+    def add_shape(self, autoshape_type_id, left, top, width, height):
+        autoshape_type = AutoShapeType(autoshape_type_id)
+        sp = self._add_sp(autoshape_type, left, top, width, height)
+        self._spTree.append(sp)  # <-- crucial step so shape becomes visible
+        return self._shape_factory(sp)
+
+    def _add_sp(self, autoshape_type, x, y, cx, cy):
+        id_ = self._next_shape_id
+        name = f"{autoshape_type.basename} {id_ - 1}"
+        return self._spTree.add_autoshape(id_, name, autoshape_type.prst, x, y, cx, cy)
+
 
 
 class NotesSlideShapes(_BaseShapes):
