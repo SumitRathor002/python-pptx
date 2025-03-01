@@ -677,17 +677,13 @@ class MasterShapes(_BaseShapes):
         return _MasterShapeFactory(shape_elm, self)
     
     # in MasterShapes
-    def add_picture(
-        self,
-        image_file,
-        left,
-        top,
-        width=None,
-        height=None
-    ):
+    def add_picture(self, image_file, left, top, width=None, height=None):
         image_part, rId = self.part.get_or_add_image_part(image_file)
         pic = self._add_pic_from_image_part(image_part, rId, left, top, width, height)
+        self._spTree.append(pic)             # <--- important!
+        self._spTree.recalculate_extents()   # <--- optional but often needed
         return self._shape_factory(pic)
+
 
     def _add_pic_from_image_part(
         self,
