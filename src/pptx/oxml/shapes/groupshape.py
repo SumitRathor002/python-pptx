@@ -53,6 +53,11 @@ class CT_GroupShape(BaseShapeElement):
         self.insert_element_before(sp, "p:extLst")
         return sp
 
+    @property
+    def next_cxn_shape_id(self):
+        used_ids = [int(id_str) for id_str in self.xpath("//p:cNvPr/@id")]
+        return max(used_ids) + 1
+    
     def add_cxnSp(
         self,
         id_: int,

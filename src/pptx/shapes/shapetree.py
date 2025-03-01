@@ -714,11 +714,11 @@ class MasterShapes(_BaseShapes):
 
     def add_connector(self, connector_type, begin_x, begin_y, end_x, end_y):
         cxnSp = self._add_cxnSp(connector_type, begin_x, begin_y, end_x, end_y)
-        self._spTree.append(cxnSp)  # <--- important to make it visible
+        self._spTree.append(cxnSp)
         return self._shape_factory(cxnSp)
-
+    
     def _add_cxnSp(self, connector_type, begin_x, begin_y, end_x, end_y):
-        id_ = self._next_shape_id
+        id_ = self._spTree.next_cxn_shape_id
         name = f"Connector {id_ - 1}"
         flipH, flipV = begin_x > end_x, begin_y > end_y
         x, y = min(begin_x, end_x), min(begin_y, end_y)
